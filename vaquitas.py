@@ -8,9 +8,8 @@ logging.basicConfig(format='%(asctime)s.%(msecs)03d [%(threadName)s] - %(message
 
 
 inicioPuente = 10
-largoPuente = 20
+largoPuente = 30
 cantidadVacas = 5
-
 
 semaforoVacas = threading.Semaphore(1)
 
@@ -18,27 +17,22 @@ class Vaca(threading.Thread):
     def __init__(self):
         super().__init__()
         self.posicion = 0
-        self.velocidad = random.uniform(0.1, 0.9)
+        self.velocidad = random.uniform(0.4, 0.8)
 
     def avanzar(self):
         while(self.posicion != inicioPuente):
             time.sleep(1-self.velocidad)
             self.posicion += 1
         if self.posicion == inicioPuente:
-            logging.info('FINAL DEL PUENTE!')
-            logging.info('FINAL DEL PUENTE!')
-            logging.info('FINAL DEL PUENTE!')
             self.avanzarSemaforo()
     
     def avanzarSemaforo(self):
         semaforoVacas.acquire()
-        while(self.posicion != largoPuente):
-            logging.info('ARRANCA PT2!')
+        while(self.posicion < largoPuente + inicioPuente):
             time.sleep(1-self.velocidad)
             self.posicion += 1
-        if self.posicion == largoPuente:
-            logging.info('ARRANCA OTRA!')
-            semaforoVacas.release()
+        semaforoVacas.release()
+        logging.info('LA SEGUNDAAAAAA!')
 
 
     def dibujar(self):
@@ -59,7 +53,8 @@ def cls():
     os.system('cls' if os.name=='nt' else 'clear')
 
 def dibujarPuente():
-    print(' ' * inicioPuente + '=' * largoPuente)
+    print(' ' * inicioPuente + '=' * (largoPuente))
+
 
 while(True):
     cls()
